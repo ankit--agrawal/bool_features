@@ -17,12 +17,12 @@ from ml import Algorithms
 algo = Algorithms()
 
 
-def random_for(X_train_m, y_train, X_test_m, y_test, name, i):
+def random_for(X_train_m, y_train, X_test_m, y_test, name, i=4):
     y_pred_m = algo.rand_forest(X_train_m, y_train, X_test_m, y_test, name, i)
     print(" Random Forest for {0} with {1} components: {2}".format(name, i, f1_matrix(y_test,y_pred_m)))
 
 
-def f1_matrix(y_test, y_pred): #confusion matrix
+def f1_score(y_test, y_pred): #confusion matrix
     from sklearn.metrics import confusion_matrix
     cm = confusion_matrix(y_test, y_pred)
 
@@ -64,7 +64,7 @@ from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(data_X, data_y, 
                                                     test_size = 0.2)
 
-#print(len(X_train), len(X_test))
+print(len(X_train), len(X_test))
 
 '''
 Linear Dimensionality reduction to see if Random Forest does a good job.
@@ -79,27 +79,23 @@ if choice == 1:
     # PCA - 90% accuracy
     name = 'PCA'
     X_train_m, X_test_m = algo.pca_compute(X_train, X_test, i)
-    if i == 2: plot_scatter(X_train_m, X_test_m, 'PCA')
-    random_for(X_train_m, y_train, X_test_m, y_test, name, i)
+    plot_scatter(X_train_m, X_test_m, 'PCA')
+    random_for(X_train_m, y_train, X_test_m, y_test, name, i) #random forest on modified dataset
 
 elif choice == 2:
     #LDA - 95% accuracy
     name = 'LDA'
     X_train_m, X_test_m = algo.lda_compute(X_train, X_test, y_train,i)
-    if i == 2: plot_scatter(X_train_m, X_test_m, 'LDA')
+    plot_scatter(X_train_m, X_test_m, 'LDA')
     random_for(X_train_m, y_train, X_test_m, y_test, name, i)
-
-elif choice == 3:
-    #Kernel-PCA (non-linear Dimensionality Reduction) - 63% accuracy
-    X_train, X_test = algo.kpca_compute(X_train_m, X_test_m)
 
 else:
     print("Incorrect option selected")
     
 #K-Means
-algo.clustering(X_train_m)
+algo.clustering(X_train_m, name) #K-Means on data after Dimensionality reduction
 
-#Random Forest algorithm
+#Random Forest algorithm on actual data
 algo.clustering(X_train, 'Input') #K-Means on actual data
 y_pred = algo.rand_forest(X_train, y_train, X_test)
-print(" Random Forest: {0}".format(f1_matrix(y_test,y_pred)))
+print(" Random Forest: {0}".format(f1_score(y_test,y_pred)))

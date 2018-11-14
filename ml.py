@@ -84,17 +84,6 @@ class Algorithms():
           ncol=4, fancybox=True, shadow=True)
         	plt.show()
 
-
-    def logistic_reg(self, X_train, y_train, X_test):
-        # Fitting Logistic Regression to the Training set
-        from sklearn.linear_model import LogisticRegression
-        classifier = LogisticRegression(random_state = 0)
-        classifier.fit(X_train, y_train)
-
-        # Predicting the Test set results
-        pred = classifier.predict(X_test)
-        return pred
-
     def rand_forest(self, X_train, y_train, X_test, y_test=None, tmp=None, j=0):
         # Fitting Random Forest Classification to the Training set
         from sklearn.ensemble import RandomForestClassifier
@@ -107,7 +96,7 @@ class Algorithms():
             self.scatter_plot_dim_red(X_test, y_test, classifier, tmp + ' test set')
         return y_pred
 
-    def scatter_plot_dim_red(self, X, Y, classifier, name):
+    def scatter_plot_dim_red(self, X, Y, classifier, name): #Random Forest algorithm plot for 2D data.
         from matplotlib.colors import ListedColormap
         X_set, y_set = X, Y
         X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
